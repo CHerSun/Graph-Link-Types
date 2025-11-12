@@ -1,6 +1,6 @@
 {
 	"name": "graph-link-types",
-	"version": "0.3.3",
+	"version": "0.3.6",
 	"description": "Link types for Obsidian graph view.",
 	"main": "main.js",
 	"scripts": {
@@ -38,9 +38,20 @@
 		"plugins": [
 			"@semantic-release/commit-analyzer",
 			"@semantic-release/release-notes-generator",
-			["@semantic-release/npm", { "npmPublish": false }],
-			["@semantic-release/exec", { "prepareCmd": "node version-bump.mjs" }],
-			["@semantic-release/git",
+			[
+				"@semantic-release/npm",
+				{
+					"npmPublish": false
+				}
+			],
+			[
+				"@semantic-release/exec",
+				{
+					"prepareCmd": "node version-bump.mjs"
+				}
+			],
+			[
+				"@semantic-release/git",
 				{
 					"assets": [
 						"package.json",
