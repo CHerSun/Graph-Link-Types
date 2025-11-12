@@ -3,6 +3,7 @@
 ## Summary
 
 > NOTE: This fork isn't meant for public service. I'm just fixing things for myself for an abandoned Obsidian plugin. PRs are welcome though.
+> I'm keeping original author info and sponsorship links.
 
 Graph Link Types is a plugin for Obsidian.md that enhances the graph-view by rendering link types dynamically. This plugin leverages the Dataview API and PIXI.js to create a more informative and interactive graph experience. By displaying the types of links between notes, it provides a clearer understanding of the relationships within your Obsidian vault.
 

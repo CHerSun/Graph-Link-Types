@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   # Uncomment to allow manual triggering
   # workflow_dispatch:
 
@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22.x'
           cache: 'npm'
 
       - name: Install dependencies

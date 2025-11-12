@@ -30,7 +30,7 @@
 		"pixi.js": "^7.3.3"
 	},
 	"release": {
-		"branches": ["main", "master"],
+		"branches": ["main"],
 		"plugins": [
 			"@semantic-release/commit-analyzer",
 			"@semantic-release/release-notes-generator",
