@@ -35,7 +35,7 @@ export class LinkManager {
         0x000000  // Black for contrast
     ]
 
-      
+
       currentTagColorIndex = 0;
       yOffset = 5; // To increment the y position for each legend item
       xOffset = 20;
@@ -55,12 +55,12 @@ export class LinkManager {
     generateKey(sourceId: string, targetId: string): string {
         return `${sourceId}-${targetId}`;
     }
-    
+
     private detectThemeChange(): void {
         let lastTheme = '';
         let lastStyleSheetHref = '';
         let debounceTimer: number;
-    
+
         const themeObserver = new MutationObserver(() => {
             clearTimeout(debounceTimer);
             debounceTimer = window.setTimeout(() => {
@@ -75,23 +75,23 @@ export class LinkManager {
                 }
             }, 100); // Debounce delay
         });
-    
+
         themeObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
         themeObserver.observe(document.head, { childList: true, subtree: true, attributes: true, attributeFilter: ['href'] });
     }
-    
+
     private getComputedColorFromClass(className : string, cssVariable : string) : string {
         // Create a temporary element
         const tempElement = document.createElement('div');
-    
+
         // Apply the class to the temporary element
         tempElement.classList.add(className);
         document.body.appendChild(tempElement);
-    
+
         // Get the computed style of the temporary element
         const style = getComputedStyle(tempElement);
         const colorValue = style.getPropertyValue(cssVariable).trim();
-    
+
         // Remove the temporary element
         document.body.removeChild(tempElement);
 
@@ -132,7 +132,7 @@ export class LinkManager {
         const reverseKey = this.generateKey(link.target.id, link.source.id);
 
         const gltLink = this.linksMap.get(key);
-        
+
         if (gltLink && gltLink.pixiText && renderer.px && renderer.px.stage && renderer.px.stage.children && renderer.px.stage.children.includes(gltLink.pixiText)) {
             renderer.px.stage.removeChild(gltLink.pixiText);
             gltLink.pixiText.destroy();
@@ -247,13 +247,13 @@ export class LinkManager {
         };
         let {nx, ny} = this.calculateNormal(link.source.x, link.source.y, link.target.x, link.target.y);
         let {px, py} = this.calculateParallel(link.source.x, link.source.y, link.target.x, link.target.y);
-        
+
         nx *= 1.5*Math.sqrt(renderer.scale);
         ny *= 1.5*Math.sqrt(renderer.scale);
 
         px *= 8*Math.sqrt(renderer.scale);
         py *= 8*Math.sqrt(renderer.scale);
-  
+
 
         let { x:x1, y:y1 } = this.getLinkToTextCoordinates(link.source.x, link.source.y, renderer.panX, renderer.panY, renderer.scale);
         let { x:x2, y:y2 } = this.getLinkToTextCoordinates(link.target.x, link.target.y, renderer.panX, renderer.panY, renderer.scale);
@@ -261,7 +261,7 @@ export class LinkManager {
         x2 += nx - (link.target.weight/36+1) * px;
         y1 += ny + (link.source.weight/36+1) * py;
         y2 += ny - (link.target.weight/36+1) * py;
-      
+
 
         if (graphics && renderer.px && renderer.px.stage && renderer.px.stage.children && renderer.px.stage.children.includes(graphics)) {
             // @ts-ignore
@@ -313,7 +313,7 @@ export class LinkManager {
 
         this.updateLinkText(renderer, link, false);
         renderer.px.stage.addChild(text);
-        
+
         return text
     }
 
@@ -327,7 +327,7 @@ export class LinkManager {
         } //doesn't add if link is null
 
         let color;
-        
+
         if (link.source.id === link.target.id) {
             linkString = "";
         } else {
@@ -369,7 +369,7 @@ export class LinkManager {
                 this.tagColors.set(linkString, newLegendGraphic);
             } else {                              // this tag is in the map already
                 const legendGraphic = this.tagColors.get(linkString)
-                
+
                 if (legendGraphic) {
                     color = legendGraphic?.color;
                     legendGraphic.nUsing += 1;
@@ -388,7 +388,7 @@ export class LinkManager {
 
         this.updateLinkGraphics(renderer, link);
 
-        
+
         return graphics
     }
 
@@ -417,8 +417,8 @@ export class LinkManager {
     // Remove all text nodes from the graph
     destroyMap(renderer: ObsidianRenderer): void {
         if (this.linksMap.size > 0) {
-            this.linksMap.forEach((gltLink, linkKey) => {   
-                this.removeLink(renderer, gltLink.obsidianLink)   
+            this.linksMap.forEach((gltLink, linkKey) => {
+                this.removeLink(renderer, gltLink.obsidianLink)
             });
         }
     }
@@ -429,7 +429,7 @@ export class LinkManager {
         if (!sourcePage) return null;
 
         for (const [key, value] of Object.entries(sourcePage)) {
-			// Skip empty values 
+			// Skip empty values
 			if (value === null || value === undefined || value === '') {
             	continue;
         	}
@@ -459,8 +459,8 @@ export class LinkManager {
                     }
                     break;
                 default:
-                    //metadata is not a link, return null
-                    return null;
+                    // We will continue to check other DataView properties
+                    break;
             }
         }
         return null;
@@ -476,33 +476,33 @@ export class LinkManager {
         // Calculate the direction vector D
         const dx = targetX - sourceX;
         const dy = targetY - sourceY;
-    
+
         // Calculate the normal vector N by rotating D by 90 degrees
         let nx = -dy;
         let ny = dx;
-    
+
         // Normalize the normal vector to get a unit vector
         const length = Math.sqrt(nx * nx + ny * ny);
         nx /= length; // Normalize the x component
         ny /= length; // Normalize the y component
-    
+
 
         return { nx, ny };
     }
-       
+
     private calculateParallel(sourceX: number, sourceY: number, targetX: number, targetY: number): { px: number; py: number; } {
         // Calculate the direction vector D from source to target
         const dx = targetX - sourceX;
         const dy = targetY - sourceY;
-    
+
         // No need to rotate the vector for a parallel vector
-    
+
         // Normalize the direction vector to get a unit vector
         const length = Math.sqrt(dx * dx + dy * dy);
         const px = dx / length; // Normalize the x component
         const py = dy / length; // Normalize the y component
-    
+
         return { px, py };
     }
-    
+
 }
