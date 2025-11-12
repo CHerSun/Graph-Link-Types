@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  push:
+    branches: [ main, master ]
+  # Uncomment to allow manual triggering
+  # workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0  # Required for semantic-release
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+        # This will automatically:
+        # 1. Determine next version based on commit messages
+        # 2. Bump version in package.json
+        # 3. Run the version-bump.mjs script (via npm version hook)
+        # 4. Build the project (via npm run build)
+        # 5. Create GitHub release with assets
+
+      - name: Upload release assets
+        run: |
+          # This ensures main.js and manifest.json are available for the release
+          ls -la main.js manifest.json
